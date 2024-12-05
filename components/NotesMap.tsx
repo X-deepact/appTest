@@ -1,70 +1,50 @@
 // src/components/NotesMap.tsx
-import React from 'react';
-import { Platform, View, Text, StyleSheet } from 'react-native';
-import { Note } from '../types';
-import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import React, { useState, useEffect } from 'react';
+import { Platform, View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 interface NotesMapProps {
   notes: Note[];
-  google: any;
 }
 
-const NotesMap: React.FC<NotesMapProps> = ({ notes, google }) => {
-  if (Platform.OS !== 'web') {
+const NotesMap: React.FC<NotesMapProps> = ({ notes }) => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Simulate loading time
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.container}>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22814.681743947614!2d35.14693831950907!3d31.78622712072101!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1502d70fb66dcb67%3A0x24cb1e2f146513f0!2sDerech%20HaGefen!5e0!3m2!1sen!2ssg!4v1733375153175!5m2!1sen!2ssg" width="1000" height="1000" style={{border : 0}} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+      </View>
+    );
+  } else {
     return (
       <View style={styles.container}>
         <Text>No map view on this platform</Text>
       </View>
     );
   }
-
-  return (
-    <View style={styles.container}>
-      <Map
-        google={google}
-        zoom={10}
-        initialCenter={{ lat: 37.7749, lng: -122.4194 }}
-        style={styles.map}
-      >
-        {notes.length === 0 ? (
-          <Text style={styles.noNotes}>No Notes Available</Text>
-        ) : (
-          notes.map((note) => (
-            <Marker
-              key={note.id}
-              position={{
-                lat: note.location.latitude,
-                lng: note.location.longitude,
-              }}
-              title={note.title}
-              name={note.body}
-            />
-          ))
-        )}
-      </Map>
-    </View>
-  );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-  noNotes: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{ translateX: -75 }, { translateY: -20 }],  
-    fontSize: 18,
-    color: '#888',
-    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
-export default GoogleApiWrapper({
-  apiKey: 'YOUR_GOOGLE_MAPS_API_KEY',
-})(NotesMap);
+export default NotesMap;

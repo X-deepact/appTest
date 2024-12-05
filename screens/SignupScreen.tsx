@@ -6,6 +6,7 @@ import { auth } from '../firebase/firebaseConfig';
 export default function Signup({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -13,9 +14,27 @@ export default function Signup({ navigation }: any) {
 
   const handleSignup = async ()  => {
     try {
+      setErrorMessage('');
       await createUserWithEmailAndPassword(auth, email, password);
+      alert(`Welcome, ${email}! Your account has been created successfully.`);
       navigation.navigate('Login');
-    } catch (error) {
+    } catch (error: any) {
+      switch (error.code) {
+        case 'auth/invalid-email':
+          setErrorMessage('Please enter a valid email address');
+          break;
+        case 'auth/missing-password':
+          setErrorMessage('Please enter a valid password');
+          break;
+        case 'auth/email-already-in-use':
+          setErrorMessage('You are already registered');
+          break;
+        case 'auth/weak-password':
+          setErrorMessage('Your password must be at least 6 characters long');
+          break;
+        default:
+          setErrorMessage('An error occurred during signup');
+      }
       console.error(error);
     }
   };
@@ -23,6 +42,7 @@ export default function Signup({ navigation }: any) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Signup</Text>
+      {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -53,4 +73,8 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 16 },
   input: { borderWidth: 1, borderColor: '#ccc', padding: 12, marginBottom: 16 },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
+  },
 }); 
