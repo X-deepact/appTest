@@ -1,4 +1,3 @@
-// src/screens/LoginScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { Button,Text, TextInput, View, StyleSheet } from 'react-native';
 import { auth } from '../firebase/firebaseConfig';

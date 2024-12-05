@@ -154,7 +154,6 @@ const NotesList: React.FC = () => {
         setModalVisible(false)
       } catch (error) {
         console.error('Error deleting note:', error.message);
-        // Optionally handle error here
       } finally {
         setModalVisible(false);
         setNoteToDelete(null);
@@ -165,7 +164,7 @@ const NotesList: React.FC = () => {
   const handleSignOut = async () => {
     try {
       await signOut(auth);
-      navigation.navigate('Login'); // Navigate to the login screen after sign out
+      navigation.navigate('Login'); 
     } catch (error) {
       console.error('Error signing out:', error);
     }

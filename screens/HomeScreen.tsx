@@ -10,7 +10,6 @@ const HomeScreen: React.FC = () => {
 
   const navigation = useNavigation();
 
-  // Disable the header
   useLayoutEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);

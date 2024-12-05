@@ -39,7 +39,7 @@ const NoteScreen: React.FC = () => {
       title,
       body,
       date: new Date().toISOString(),
-      userId: user.uid, // Associate the note with the current user
+      userId: user.uid, 
     };
 
     try {
